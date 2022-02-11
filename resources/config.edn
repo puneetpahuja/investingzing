@@ -1,0 +1,4 @@
+{:server/jetty {:handler #ig/ref :investingzing/app
+                :port 3000}
+ :investingzing/app {:jdbc-url #ig/ref :db/postgres}
+ :db/postgres {:jdbc-url "dummy"}}
