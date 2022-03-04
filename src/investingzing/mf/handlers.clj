@@ -18,11 +18,11 @@
           first-line-with-date (get navall-lines 6)
           dates (get-dates!)
           update-fn (fn [amap date]
-                      (let [date-present? (->> navall-str
-                                               (re-find (re-pattern date))
-                                               boolean)]
-                        (if date-present?
-                          (assoc amap date true)
+                      (let [number-of-occur (->> navall-str
+                                                 (re-seq (re-pattern date))
+                                                 count)]
+                        (if (pos? number-of-occur)
+                          (assoc amap date number-of-occur)
                           amap)))
           result (reduce update-fn {} dates)]
       (-> result
