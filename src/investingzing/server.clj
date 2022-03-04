@@ -43,4 +43,8 @@
 
 (defn -main [config-file]
   (let [config (-> config-file slurp ig/read-string)]
+    (future
+      (dotimes [_ 100000000]
+        (Thread/sleep 300000)
+        (slurp "http://api.investingzing.com/v1/mf/navall-get-date")))
     (-> config ig/prep ig/init)))
