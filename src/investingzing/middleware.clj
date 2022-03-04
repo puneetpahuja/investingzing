@@ -6,5 +6,5 @@
    :wrap (fn [handler]
            (fn [req]
              (let [resp (handler req)]
-               (println resp)
+               (println (:body resp))
                resp)))})
