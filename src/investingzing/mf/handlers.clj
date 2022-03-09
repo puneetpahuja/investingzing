@@ -42,4 +42,5 @@
                                client/get
                                :body
                                json/decode)]
-      (db/insert-schemes db schemes-details))))
+      (future (db/insert-schemes db schemes-details))
+      (rr/response {:database "updating"}))))
