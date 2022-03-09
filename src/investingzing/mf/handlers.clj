@@ -1,7 +1,10 @@
 (ns investingzing.mf.handlers
   (:require [ring.util.response :as rr]
             [java-time :as t]
-            [clojure.string :as s]))
+            [clojure.string :as s]
+            [clj-http.client :as client]
+            [cheshire.core :as json]
+            [investingzing.mf.db :as db]))
 
 (defn get-dates!
   []
@@ -32,3 +35,11 @@
                       (t/format "dd-MMM hh:mma"))
            :date-string first-line-with-date)
           rr/response))))
+
+(defn update-schemes-from-api [db]
+  (fn [_req]
+    (let [schemes-details (->> "https://api.mfapi.in/mf"
+                               client/get
+                               :body
+                               json/decode)]
+      (db/insert-schemes db schemes-details))))

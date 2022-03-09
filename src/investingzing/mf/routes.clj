@@ -10,4 +10,7 @@
       {:get  {:handler   (mf/navall-get-date)
               :middleware [[mw/wrap-print-response]]
               ;; :responses {200 {:body nil?}}
-              :summary   "See if we have NAVAll.txt for the given date"}}]]))
+              :summary   "See how many schemes have NAVs for today and past two days."}}]
+     ["/update-schemes-from-api"
+      {:get {:handler (mf/update-schemes-from-api db)
+             :summary "Update schemes' details from API."}}]]))

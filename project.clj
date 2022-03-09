@@ -15,6 +15,7 @@
                  [clj-http "3.12.3"]
                  [ovotech/ring-jwt "2.3.0"]
                  [camel-snake-kebab "0.4.2"]
+                 [cheshire "5.10.2"]
                 ;;  [com.zaxxer/HikariCP "5.0.1"]
                  ]
   :repl-options {:init-ns investingzing.server}
