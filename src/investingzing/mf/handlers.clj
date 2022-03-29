@@ -36,11 +36,45 @@
            :date-string first-line-with-date)
           rr/response))))
 
+(defn get-json-body [url]
+  (->> url
+       client/get
+       :body
+       json/decode))
+
+;; should add 33948 rows
 (defn update-schemes-from-api [db]
   (fn [_req]
-    (let [schemes-details (->> "https://api.mfapi.in/mf"
-                               client/get
-                               :body
-                               json/decode)]
+    (let [schemes-details (get-json-body "https://api.mfapi.in/mf")]
       (future (db/insert-schemes db schemes-details))
+      (rr/response {:database "updating"}))))
+
+(def fields-map
+  {"Scheme Code" :code
+   "ISIN Div Payout/ ISIN Growth" :isin_div_payout_growth
+   "ISIN Div Reinvestment" :isin_dev_reinvestment
+   "Scheme Name" :name
+   "Net Asset Value" :nav
+   "Date" :date})
+
+(defn parse-data [field-list [fund-category fund-house last-updated data] navall-line]
+  (let [splitted-navall-line (s/split navall-line #";")]
+    (if (< (count splitted-navall-line) (count field-list))
+      (cond
+        (false? last-updated) [fund-category navall-line true data]
+        :else [fund-house navall-line false data])
+      (let [datum
+            (-> (zipmap (map (partial get fields-map) field-list) splitted-navall-line)
+                (assoc :category fund-category :house fund-house))]
+        [fund-category fund-house false (conj data datum)]))))
+
+(defn update-schemes-and-nav-from-navall [db]
+  (fn [_req]
+    (let [navall-lines (->> (slurp "https://www.amfiindia.com/spages/NAVAll.txt")
+                            (s/split-lines)
+                            (remove s/blank?))
+          fields (-> navall-lines first (s/split #";"))
+          [_fund-category _fund-house _last-updated data] (reduce (partial parse-data fields)
+                                                                  [nil nil false []] (rest navall-lines))]
+      (future (db/insert-schemes-and-nav db data))
       (rr/response {:database "updating"}))))

@@ -16,6 +16,7 @@
                  [ovotech/ring-jwt "2.3.0"]
                  [camel-snake-kebab "0.4.2"]
                  [cheshire "5.10.2"]
+                 [org.clojure/tools.logging "1.2.4"]
                 ;;  [com.zaxxer/HikariCP "5.0.1"]
                  ]
   :repl-options {:init-ns investingzing.server}

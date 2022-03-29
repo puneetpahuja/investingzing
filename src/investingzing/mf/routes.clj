@@ -13,4 +13,7 @@
               :summary   "See how many schemes have NAVs for today and past two days."}}]
      ["/update-schemes-from-api"
       {:get {:handler (mf/update-schemes-from-api db)
-             :summary "Update schemes' details from API."}}]]))
+             :summary "Update schemes' details from API."}}]
+     ["/update-schemes-and-nav-from-navall"
+      {:get {:handler (mf/update-schemes-and-nav-from-navall db)
+             :summary "Updates schemes' details and NAV prices from API."}}]]))
