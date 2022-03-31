@@ -10,7 +10,8 @@
             [reitit.ring.middleware.exception :as exception]
             [reitit.dev.pretty :as pretty]
             [reitit.ring.spec :as rs]
-            [reitit.ring.middleware.dev :as dev]))
+            ;; [reitit.ring.middleware.dev :as dev]
+            ))
 
 (def swagger-docs
   ["/swagger.json"
@@ -25,12 +26,12 @@
 (def router-config
   {:validate  rs/validate
   ;;  :reitit.middleware/transform dev/print-request-diffs
-  ;;  :exception pretty/exception
+   :exception pretty/exception
    :data      {:coercion   coercion-spec/coercion
                :muuntaja   m/instance
                :middleware [swagger/swagger-feature
                             muuntaja/format-middleware
-                            ;; exception/exception-middleware
+                            exception/exception-middleware
                             coercion/coerce-request-middleware
                             coercion/coerce-response-middleware]}})
 

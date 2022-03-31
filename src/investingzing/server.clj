@@ -1,11 +1,11 @@
 (ns investingzing.server
-  (:require [investingzing.router :as router]
-            ;; [reitit.ring :as ring]
-            [ring.adapter.jetty :as jetty]
+  (:require [environ.core :refer [env]]
             [integrant.core :as ig]
-            [environ.core :refer [env]])
-  ;; (:import (com.zaxxer.hikari HikariDataSource))
-  )
+            [investingzing.router :as router] ;; [reitit.ring :as ring]
+            [next.jdbc :as jdbc]
+            [ring.adapter.jetty :as jetty]
+            [next.jdbc.connection :as njc])
+  (:import (com.zaxxer.hikari HikariDataSource)))
 
 (defn app [envn]
   (router/routes envn))
@@ -33,9 +33,15 @@
   (app config))
 
 (defmethod ig/init-key :db/postgres
+  [_ {:keys [jdbc-url]}]
+  (println "\nConfigured db")
+  (jdbc/with-options
+    (njc/->pool HikariDataSource {:jdbcUrl jdbc-url})
+    jdbc/snake-kebab-opts))
+
+(defmethod ig/halt-key! :db/postgres
   [_ config]
-  (println "\n Configured db")
-  (:jdbc-url config))
+  (.close ^HikariDataSource (:connectable config)))
 
 (defmethod ig/halt-key! :server/jetty
   [_ jetty]
