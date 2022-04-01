@@ -5,6 +5,7 @@
             [reitit.swagger-ui :as swagger-ui]
             [muuntaja.core :as m]
             [reitit.ring.middleware.muuntaja :as muuntaja]
+            [reitit.ring.middleware.parameters :as parameters]
             [reitit.coercion.spec :as coercion-spec]
             [reitit.ring.coercion :as coercion]
             [reitit.ring.middleware.exception :as exception]
@@ -33,7 +34,8 @@
                             muuntaja/format-middleware
                             exception/exception-middleware
                             coercion/coerce-request-middleware
-                            coercion/coerce-response-middleware]}})
+                            coercion/coerce-response-middleware
+                            parameters/parameters-middleware]}})
 
 (defn routes [envn]
   (ring/ring-handler
@@ -43,4 +45,5 @@
       (mf/routes envn)]]
     router-config)
    (ring/routes
-    (swagger-ui/create-swagger-ui-handler {:path "/"}))))
+    (swagger-ui/create-swagger-ui-handler {:path "/"})
+    (ring/create-default-handler))))

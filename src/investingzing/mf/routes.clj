@@ -23,4 +23,11 @@
              :parameters {:path {:code int?}}}}]
      ["/update-schemes-and-nav-from-navall"
       {:get {:handler (mf/update-schemes-and-nav-from-navall db)
-             :summary "Updates schemes' details and NAV prices from API."}}]]))
+             :summary "Updates schemes' details and NAV prices from API."}}]
+     ["/history/:code"
+      {:get {:handler (mf/history db)
+             :summary "Get history for a scheme."
+             :parameters {:path {:code int?}
+                          ;; :query {:from string?
+                          ;;         :to string?}
+                          }}}]]))

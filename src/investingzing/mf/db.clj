@@ -98,3 +98,10 @@
                     :nav (Double/parseDouble nav)}
                    {:suffix "ON CONFLICT (code, date, nav) DO NOTHING"})))
   (l/info "DONE update nav from MF API"))
+
+(defn history [db code start-date end-date]
+  (sql/find-by-keys db
+                    :mf-nav
+                    ["code = ? AND date >= ? AND date <= ?" code start-date end-date]
+                    {:columns [:date :nav]
+                     :order-by [[:date :asc]]}))

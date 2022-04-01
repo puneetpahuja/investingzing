@@ -3,8 +3,8 @@
             [integrant.core :as ig]
             [investingzing.router :as router] ;; [reitit.ring :as ring]
             [next.jdbc :as jdbc]
-            [ring.adapter.jetty :as jetty]
-            [next.jdbc.connection :as njc])
+            [next.jdbc.connection :as njc]
+            [ring.adapter.jetty :as jetty])
   (:import (com.zaxxer.hikari HikariDataSource)))
 
 (defn app [envn]
@@ -37,7 +37,7 @@
   (println "\nConfigured db")
   (jdbc/with-options
     (njc/->pool HikariDataSource {:jdbcUrl jdbc-url})
-    jdbc/snake-kebab-opts))
+    jdbc/unqualified-snake-kebab-opts))
 
 (defmethod ig/halt-key! :db/postgres
   [_ config]

@@ -100,3 +100,14 @@
       (doseq [nav-details data]
         (future-with-exceptions db/upsert-nav-from-api db nav-details)))
     (rr/response {:database "updating"})))
+
+(defn history [db]
+  (fn [req]
+    (let [code (-> req :path-params :code Integer/parseInt)
+          {:strs [from to]} (-> req :query-params)
+          [start-date end-date] (->> [from to]
+                                     (map (partial t/local-date (t/formatter "dd-MM-yyyy"))))
+          correct-date-format #(update % :date (comp (partial t/format "dd-MM-yyyy") t/local-date))]
+      (->> (db/history db code start-date end-date)
+           (map correct-date-format)
+           rr/response))))
