@@ -1,4 +1,5 @@
 # InvestingZing
 REST API backend for `InvestingZing`: A mutual funds explorer and comparator.
+<br/><br/>
+![details](resources/investingzing.png)
 
-More details at [investingzing.com](http://investingzing.com).
